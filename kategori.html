@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kategori — RuangRame</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Space+Mono:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar-inner">
+    <div class="logo">Ruang<span>Rame</span></div>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="kategori.html" class="active">Kategori</a>
+      <a href="threads.html">Thread</a>
+      <a href="index.html#trending">Trending</a>
+    </div>
+    <div class="nav-search">
+      🔍 <input type="text" id="catSearch" placeholder="Cari kategori...">
+    </div>
+    <button class="hamburger"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="container">
+    <div class="breadcrumb"><a href="index.html">Home</a> / Kategori</div>
+    <h1>Semua Kategori</h1>
+    <p style="color:var(--text-dim);font-size:14px;margin-top:6px;">Pilih topik yang paling sesuai sama minat kamu.</p>
+  </div>
+</div>
+
+<section class="section container">
+  <div class="cat-grid" id="kategoriAll"></div>
+</section>
+
+<footer>
+  © 2026 RuangRame — Project UTS Kelompok Sistem Informasi Untar.
+</footer>
+
+<script src="script.js"></script>
+<script>
+  const grid = document.getElementById("kategoriAll");
+  renderKategoriCards(grid, kategoriData);
+
+  initSearch(document.getElementById("catSearch"), (q) => {
+    const filtered = kategoriData.filter(k => k.nama.toLowerCase().includes(q));
+    renderKategoriCards(grid, q ? filtered : kategoriData);
+  });
+</script>
+</body>
+</html>

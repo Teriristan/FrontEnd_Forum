@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Notifikasi - Forumku</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/fitur.css">
+</head>
+<body>
+  <header id="site-header" data-active="notifikasi"></header>
+
+  <main class="container">
+    <div class="page-head">
+      <div>
+        <h1>Notifikasi</h1>
+        <p class="lead">Balasan, mention, dan kabar terbaru dari thread yang kamu ikuti.</p>
+      </div>
+      <div class="page-head__actions">
+        <button class="btn btn--primary" id="btn-read-all" type="button">Tandai semua dibaca</button>
+        <button class="btn" id="btn-clear-read" type="button">Hapus yang sudah dibaca</button>
+      </div>
+    </div>
+
+    <div class="tabs" id="notif-tabs" role="group" aria-label="Filter notifikasi"></div>
+    <div id="notif-list" aria-live="polite"></div>
+
+    <div class="demo-tools">
+      <button class="btn btn--ghost" id="btn-sim" type="button">Simulasikan notifikasi baru</button>
+      <button class="btn btn--ghost" id="btn-reset" type="button">Reset data dummy</button>
+    </div>
+  </main>
+
+  <script src="js/data.js"></script>
+  <script src="js/shared.js"></script>
+  <script src="js/notifikasi.js"></script>
+</body>
+</html>

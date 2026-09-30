@@ -1,3 +1,4 @@
+// ORANG 1
 // ===== DUMMY DATA (tanpa database) =====
 const kategoriData = [
   { id: "teknologi", icon: "💻", nama: "Teknologi & Gadget", desc: "Diskusi HP, laptop, software, dan dunia IT.", thread: 482, member: "3.1k" },
@@ -89,7 +90,9 @@ function renderTrendingNews(container, data) {
   `).join("");
 }
 
+
 // ===== RENDER: list thread per kategori (threads.html) =====
+// ORANG 2
 function renderThreadList(container, data, sortBy) {
   let sorted = [...data];
   if (sortBy === "terbaru") sorted.sort((a, b) => a.id - b.id).reverse();
@@ -100,6 +103,24 @@ function renderThreadList(container, data, sortBy) {
     container.innerHTML = `<p style="color:var(--text-dim);padding:20px;">Belum ada thread di kategori ini.</p>`;
     return;
   }
+
+  container.innerHTML = sorted.map(t => `
+    <a href="thread-detail.html?id=${t.id}" class="card thread-row" style="display:flex;text-decoration:none;">
+      <div class="avatar"></div>
+      <div style="flex:1">
+        <h3>${t.pinned ? '<span class="pinned-badge">PINNED</span>' : ''}${t.judul}</h3>
+        <p class="snippet">${t.snippet}</p>
+        <div class="thread-stats">
+          <span><b>${t.author}</b></span>
+          <span>${t.waktu}</span>
+          <span><b>${t.reply}</b> balasan</span>
+          <span><b>${t.view}</b> dilihat</span>
+          <span><b>${t.vote}</b> vote</span>
+        </div>
+      </div>
+    </a>
+  `).join("");
+
 
   container.innerHTML = sorted.map(t => `
     <div class="card thread-row">
@@ -125,4 +146,265 @@ function initSearch(inputEl, onSearch) {
   inputEl.addEventListener("input", (e) => onSearch(e.target.value.toLowerCase().trim()));
 }
 
+// ===== DUMMY DATA: komentar per thread (nested, tanpa database) =====
+const commentsData = {
+  1: [
+    { id: "c1", author: "kaya.nrs", waktu: "10 menit lalu", isi: "Coba cek Lenovo IdeaPad Slim atau Asus Vivobook, biasanya spek segitu udah cukup buat coding ringan.", replies: [
+      { id: "c1r1", author: "rafif_dev", waktu: "8 menit lalu", isi: "Setuju, aku pake Vivobook juga lancar buat VSCode + Figma." }
+    ]},
+    { id: "c2", author: "tristan.a", waktu: "5 menit lalu", isi: "Kalau budget bisa nambah dikit, ambil yang RAM 16GB biar gak lag pas buka banyak tab.", replies: [] }
+  ],
+  2: [
+    { id: "c3", author: "laode_r", waktu: "20 menit lalu", isi: "Gas, aku ikutan. Rank berapa sekarang?", replies: [] }
+  ],
+  4: [
+    { id: "c4", author: "chris.reinner", waktu: "1 jam lalu", isi: "Normal banget, aku juga dulu struggling di ERD. Coba latihan bikin ERD dari kasus sederhana dulu.", replies: [
+      { id: "c4r1", author: "kaya.nrs", waktu: "50 menit lalu", isi: "Bener, lama-lama kebiasa kok. Semangat!" }
+    ]},
+    { id: "c5", author: "rafif_dev", waktu: "40 menit lalu", isi: "Basis data emang butuh jam terbang, jangan minder.", replies: [] }
+  ]
+};
+
+// Ambil komentar dummy generik kalau thread belum punya data komentar spesifik
+function getComments(threadId) {
+  return commentsData[threadId] || [
+    { id: "gen1", author: "member_forum", waktu: "1 jam lalu", isi: "Thread menarik, ditunggu update selanjutnya!", replies: [] }
+  ];
+}
+
+// ===== RENDER: halaman Detail Thread =====
+function renderThreadDetail(container, thread, kategoriNama) {
+  container.innerHTML = `
+    <div class="card" style="padding:22px;margin-bottom:20px;">
+      <span class="tag">${kategoriNama}</span>
+      ${thread.pinned ? '<span class="pinned-badge">PINNED</span>' : ''}
+      <h1 style="font-size:22px;margin:10px 0;">${thread.judul}</h1>
+      <div class="thread-meta"><b>${thread.author}</b> · ${thread.waktu} · ${thread.view} dilihat</div>
+      <p style="margin-top:16px;font-size:14px;color:var(--text-dim);line-height:1.7;">
+        ${thread.snippet} Ini adalah isi lengkap dummy dari thread untuk keperluan tampilan, karena project ini tidak menggunakan database sehingga seluruh konten bersifat statis.
+      </p>
+      <div class="thread-stats" style="margin-top:16px;">
+        <span>▲ <b>${thread.vote}</b> vote</span>
+        <span><b>${thread.reply}</b> balasan</span>
+      </div>
+    </div>
+  `;
+}
+
+// ===== RENDER: komentar (nested, 1 level reply) =====
+function renderComments(container, comments) {
+  if (comments.length === 0) {
+    container.innerHTML = `<p style="color:var(--text-dim);font-size:13px;">Belum ada komentar.</p>`;
+    return;
+  }
+  container.innerHTML = comments.map(c => `
+    <div class="comment-item">
+      <div class="avatar" style="width:32px;height:32px;"></div>
+      <div style="flex:1">
+        <div class="thread-meta"><b>${c.author}</b> · ${c.waktu}</div>
+        <p style="font-size:13px;margin-top:4px;">${c.isi}</p>
+        ${c.replies.length > 0 ? `
+          <div class="comment-replies">
+            ${c.replies.map(r => `
+              <div class="comment-item">
+                <div class="avatar" style="width:28px;height:28px;"></div>
+                <div style="flex:1">
+                  <div class="thread-meta"><b>${r.author}</b> · ${r.waktu}</div>
+                  <p style="font-size:13px;margin-top:4px;">${r.isi}</p>
+                </div>
+              </div>
+            `).join("")}
+          </div>
+        ` : ""}
+      </div>
+    </div>
+  `).join("");
+}
+
+// Tambah komentar baru ke tampilan (dummy, tidak tersimpan permanen)
+function addDummyComment(container, existingComments, isi) {
+  existingComments.unshift({
+    id: "new-" + Date.now(),
+    author: "kamu",
+    waktu: "baru saja",
+    isi: isi,
+    replies: []
+  });
+  renderComments(container, existingComments);
+}
+
+// ===== RENDER: hasil pencarian (search.html) =====
+function renderSearchResults(container, data, keyword) {
+  if (!keyword) {
+    container.innerHTML = `<p style="color:var(--text-dim);padding:20px;">Ketik kata kunci untuk mencari thread.</p>`;
+    return;
+  }
+  const filtered = data.filter(t => t.judul.toLowerCase().includes(keyword.toLowerCase()));
+  renderThreadList(container, filtered, "terbaru");
+}
+
 document.addEventListener("DOMContentLoaded", initNavbar);
+
+// ===== DUMMY DATA: tag & topik (tanpa database) ORANG 3 =====
+const tagData = [
+  { id: "coding", nama: "Coding", jumlah: 342 },
+  { id: "esport", nama: "Esport", jumlah: 289 },
+  { id: "startup", nama: "Startup", jumlah: 256 },
+  { id: "kuliah", nama: "Kuliah", jumlah: 198 },
+  { id: "kpop", nama: "K-Pop", jumlah: 176 },
+  { id: "resep", nama: "Resep", jumlah: 143 },
+  { id: "motor", nama: "Motor", jumlah: 120 },
+  { id: "anime", nama: "Anime", jumlah: 98 },
+];
+
+// Mapping thread -> tag (pakai id thread yang sudah ada di threadData)
+const threadTagsData = {
+  1: ["coding", "kuliah"],
+  2: ["esport"],
+  3: ["coding"],
+  4: ["kuliah"],
+  5: ["motor"],
+  6: ["resep"],
+  7: ["coding", "kuliah"],
+  8: ["esport", "anime"],
+};
+
+// ===== RENDER: cloud tag populer (tag-populer.html) =====
+function renderTagCloud(container, tags) {
+  const sorted = [...tags].sort((a, b) => b.jumlah - a.jumlah);
+  container.innerHTML = sorted.map(t => `
+    <a href="thread-tag.html?tag=${t.id}" class="tag-pill">
+      #${t.nama} <span>${t.jumlah}</span>
+    </a>
+  `).join("");
+}
+
+// ===== RENDER: thread berdasarkan tag tertentu (thread-tag.html) =====
+function renderThreadsByTag(container, tagId) {
+  const filteredIds = Object.keys(threadTagsData).filter(id =>
+    threadTagsData[id].includes(tagId)
+  ).map(Number);
+  const filtered = threadData.filter(t => filteredIds.includes(t.id));
+  renderThreadList(container, filtered, "terbaru");
+}
+
+// ===== RENDER: trending topics (trending-topics.html) =====
+function renderTrendingTopics(container, tags) {
+  const sorted = [...tags].sort((a, b) => b.jumlah - a.jumlah);
+  const max = sorted[0].jumlah;
+  container.innerHTML = sorted.map((t, i) => `
+    <a href="thread-tag.html?tag=${t.id}" class="card trending-rank-item">
+      <div class="rank-number">${i + 1}</div>
+      <div style="flex:1">
+        <h4>#${t.nama}</h4>
+        <div class="rank-bar-track">
+          <div class="rank-bar-fill" style="width:${(t.jumlah / max) * 100}%"></div>
+        </div>
+      </div>
+      <div class="rank-count">${t.jumlah}<small>thread</small></div>
+    </a>
+  `).join("");
+}
+
+// ===== DUMMY DATA: notifikasi (tanpa database)  ORANG 4 =====
+const notifikasiData = [
+  { id: 1, tipe: "reply", icon: "💬", judul: "tristan.a membalas thread kamu", isi: '"Setuju, aku pake Vivobook juga lancar..."', waktu: "5 menit lalu", dibaca: false, link: "thread-detail.html?id=1" },
+  { id: 2, tipe: "vote", icon: "⬆️", judul: "Thread kamu dapat 10 vote baru", isi: "Anak SI tapi struggling banget di mata kuliah basis data...", waktu: "30 menit lalu", dibaca: false, link: "thread-detail.html?id=4" },
+  { id: 3, tipe: "mention", icon: "🔔", judul: "kaya.nrs menyebut kamu di komentar", isi: '"@rafif_dev setuju banget sama pendapat ini"', waktu: "1 jam lalu", dibaca: true, link: "thread-detail.html?id=4" },
+  { id: 4, tipe: "reply", icon: "💬", judul: "laode_r membalas thread kamu", isi: '"Wajib coba ini kalau lewat situ!"', waktu: "3 jam lalu", dibaca: true, link: "thread-detail.html?id=6" },
+  { id: 5, tipe: "sistem", icon: "🎉", judul: "Selamat! Reputasi kamu naik ke level Aktivis", isi: "Terus aktif buat naik ke level berikutnya.", waktu: "1 hari lalu", dibaca: true, link: "leaderboard.html" },
+];
+
+// ===== DUMMY DATA: leaderboard/reputasi (tanpa database) =====
+const leaderboardData = [
+  { rank: 1, username: "kaya.nrs", cendol: 1842, level: "Sesepuh Forum", thread: 156, badge: "🏆" },
+  { rank: 2, username: "rafif_dev", cendol: 1590, level: "Aktivis", thread: 132, badge: "🥈" },
+  { rank: 3, username: "tristan.a", cendol: 1344, level: "Aktivis", thread: 98, badge: "🥉" },
+  { rank: 4, username: "chris.reinner", cendol: 980, level: "Kontributor", thread: 74, badge: "" },
+  { rank: 5, username: "laode_r", cendol: 812, level: "Kontributor", thread: 61, badge: "" },
+  { rank: 6, username: "member_forum", cendol: 430, level: "Newbie Aktif", thread: 22, badge: "" },
+];
+
+// ===== DUMMY DATA: laporan moderasi (tanpa database) =====
+const laporanData = [
+  { id: 1, threadJudul: "Laptop 8 jutaan yang worth it buat kuliah SI, ada rekomendasi?", pelapor: "member_forum", alasan: "Spam iklan di komentar", status: "pending", waktu: "10 menit lalu" },
+  { id: 2, threadJudul: "[WTS] Keyboard mechanical 2nd, kondisi 95%, harga nego", pelapor: "kaya.nrs", alasan: "Konten menyinggung SARA", status: "pending", waktu: "1 jam lalu" },
+  { id: 3, threadJudul: "Server mabar Valorant rank Immortal, gas malam ini?", pelapor: "tristan.a", alasan: "Ujaran kebencian ke pemain lain", status: "selesai", waktu: "5 jam lalu" },
+  { id: 4, threadJudul: "Rekomendasi warteg legend di sekitar kampus Untar", pelapor: "laode_r", alasan: "Judul clickbait / menyesatkan", status: "ditolak", waktu: "1 hari lalu" },
+];
+
+// ===== RENDER: notifikasi (notifikasi.html) =====
+function renderNotifikasi(container, data) {
+  if (data.length === 0) {
+    container.innerHTML = `<p style="color:var(--text-dim);padding:20px;">Tidak ada notifikasi.</p>`;
+    return;
+  }
+  container.innerHTML = data.map(n => `
+    <a href="${n.link}" class="card notif-item ${n.dibaca ? '' : 'notif-unread'}">
+      <div class="notif-icon">${n.icon}</div>
+      <div style="flex:1">
+        <h4>${n.judul}</h4>
+        <p class="notif-snippet">${n.isi}</p>
+        <div class="thread-meta">${n.waktu}</div>
+      </div>
+      ${!n.dibaca ? '<span class="notif-dot"></span>' : ''}
+    </a>
+  `).join("");
+}
+
+// Tandai semua notifikasi sudah dibaca (dummy, tidak tersimpan permanen)
+function tandaiSemuaDibaca(data, container) {
+  data.forEach(n => n.dibaca = true);
+  renderNotifikasi(container, data);
+}
+
+// ===== RENDER: leaderboard/reputasi (leaderboard.html) =====
+function renderLeaderboard(container, data) {
+  container.innerHTML = data.map(u => `
+    <div class="card leaderboard-row ${u.rank <= 3 ? 'leaderboard-top' : ''}">
+      <div class="lb-rank">${u.badge || u.rank}</div>
+      <div class="avatar" style="width:36px;height:36px;"></div>
+      <div style="flex:1">
+        <h4>${u.username}</h4>
+        <span class="tag">${u.level}</span>
+      </div>
+      <div class="lb-stats">
+        <div><b>${u.cendol}</b><small>cendol</small></div>
+        <div><b>${u.thread}</b><small>thread</small></div>
+      </div>
+    </div>
+  `).join("");
+}
+
+// ===== RENDER: panel moderasi/report (moderasi.html) =====
+function renderLaporan(container, data, filterStatus) {
+  const filtered = filterStatus === "semua" ? data : data.filter(l => l.status === filterStatus);
+  if (filtered.length === 0) {
+    container.innerHTML = `<p style="color:var(--text-dim);padding:20px;">Tidak ada laporan di status ini.</p>`;
+    return;
+  }
+  container.innerHTML = filtered.map(l => `
+    <div class="card laporan-row" data-id="${l.id}">
+      <div style="flex:1">
+        <h4>${l.threadJudul}</h4>
+        <div class="thread-meta">Dilaporkan oleh <b>${l.pelapor}</b> · ${l.waktu}</div>
+        <p class="notif-snippet">Alasan: ${l.alasan}</p>
+      </div>
+      <div class="laporan-actions">
+        <span class="status-badge status-${l.status}">${l.status}</span>
+        ${l.status === "pending" ? `
+          <button class="btn-mini btn-approve" onclick="prosesLaporan(${l.id}, 'selesai')">Setujui Hapus</button>
+          <button class="btn-mini btn-reject" onclick="prosesLaporan(${l.id}, 'ditolak')">Tolak</button>
+        ` : ""}
+      </div>
+    </div>
+  `).join("");
+}
+
+// Proses laporan (dummy, ubah status di memori saja, tidak permanen)
+let currentLaporanFilter = "semua";
+function prosesLaporan(id, statusBaru) {
+  const target = laporanData.find(l => l.id === id);
+  if (target) target.status = statusBaru;
+  renderLaporan(document.getElementById("laporanBox"), laporanData, currentLaporanFilter);
+}

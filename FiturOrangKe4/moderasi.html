@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Panel Moderasi - Forumku</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/fitur.css">
+</head>
+<body>
+  <header id="site-header" data-active="moderasi"></header>
+
+  <main class="container">
+    <div class="page-head">
+      <div>
+        <h1>Panel moderasi</h1>
+        <p class="lead">Tinjau laporan dari anggota, lalu putuskan tindakan. Setiap keputusan tercatat di log.</p>
+      </div>
+      <div class="page-head__actions">
+        <button class="btn btn--primary" id="btn-new-report" type="button">Buat laporan (simulasi)</button>
+      </div>
+    </div>
+
+    <div class="stat-cards" id="stats"></div>
+
+    <div class="mod-layout">
+      <section class="panel" aria-label="Daftar laporan">
+        <div class="mod-filters">
+          <select id="f-status" aria-label="Filter status">
+            <option value="pending">Perlu ditinjau</option>
+            <option value="ditindak">Sudah ditindak</option>
+            <option value="diabaikan">Diabaikan</option>
+            <option value="semua">Semua status</option>
+          </select>
+          <select id="f-alasan" aria-label="Filter alasan"></select>
+          <input id="f-q" type="search" placeholder="Cari ID atau username" aria-label="Cari laporan">
+        </div>
+        <ul id="queue"></ul>
+      </section>
+
+      <section class="panel detail" id="detail" aria-label="Detail laporan" aria-live="polite"></section>
+    </div>
+
+    <section class="panel" style="margin-top:20px">
+      <div class="panel__head">
+        <h2>Log aktivitas moderator</h2>
+        <button class="btn btn--ghost btn--sm" id="btn-reset" type="button">Reset data dummy</button>
+      </div>
+      <div class="panel__body"><ul class="log" id="log"></ul></div>
+    </section>
+  </main>
+
+  <!-- Dialog konfirmasi tindakan berat -->
+  <dialog id="confirm-dialog" aria-labelledby="confirm-title">
+    <form method="dialog">
+      <div class="dialog__body">
+        <h2 id="confirm-title"></h2>
+        <p id="confirm-msg"></p>
+      </div>
+      <div class="dialog__foot">
+        <button class="btn" value="batal">Batal</button>
+        <button class="btn btn--danger" id="confirm-ok" value="ok">Lanjutkan</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Dialog form lapor (bisa dipakai ulang di halaman thread) -->
+  <dialog id="report-dialog" aria-labelledby="report-title">
+    <form id="report-form" novalidate>
+      <div class="dialog__body">
+        <h2 id="report-title">Laporkan konten</h2>
+        <p style="margin-bottom:16px">Laporanmu akan ditinjau moderator. Identitas pelapor tidak ditampilkan ke pengguna yang dilaporkan.</p>
+
+        <div class="field" id="fld-tipe">
+          <label for="r-tipe">Yang dilaporkan</label>
+          <select id="r-tipe">
+            <option value="Thread">Thread</option>
+            <option value="Komentar">Komentar</option>
+            <option value="User">Pengguna</option>
+          </select>
+        </div>
+        <div class="field" id="fld-lokasi">
+          <label for="r-lokasi">Judul thread atau tautan</label>
+          <input id="r-lokasi" type="text" placeholder="Contoh: Thread &quot;Promo follower murah&quot;">
+          <div class="field__error"></div>
+        </div>
+        <div class="field" id="fld-terlapor">
+          <label for="r-terlapor">Username yang dilaporkan</label>
+          <input id="r-terlapor" type="text" placeholder="Contoh: promo_murah88">
+          <div class="field__error"></div>
+        </div>
+        <div class="field" id="fld-alasan">
+          <label for="r-alasan">Alasan</label>
+          <select id="r-alasan"></select>
+        </div>
+        <div class="field" id="fld-ket">
+          <label for="r-ket">Penjelasan singkat</label>
+          <textarea id="r-ket" placeholder="Jelaskan apa yang melanggar aturan (minimal 10 karakter)"></textarea>
+          <div class="field__error"></div>
+        </div>
+      </div>
+      <div class="dialog__foot">
+        <button class="btn" type="button" id="report-cancel">Batal</button>
+        <button class="btn btn--primary" type="submit">Kirim laporan</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="js/data.js"></script>
+  <script src="js/shared.js"></script>
+  <script src="js/moderasi.js"></script>
+</body>
+</html>

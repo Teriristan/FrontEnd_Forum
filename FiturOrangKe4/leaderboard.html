@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Leaderboard - Forumku</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/fitur.css">
+</head>
+<body>
+  <header id="site-header" data-active="leaderboard"></header>
+
+  <main class="container">
+    <div class="page-head">
+      <div>
+        <h1>Leaderboard reputasi</h1>
+        <p class="lead">Anggota dengan kontribusi terbanyak. Poin didapat dari thread, komentar, dan upvote.</p>
+      </div>
+    </div>
+
+    <div class="lb-layout">
+      <section aria-label="Peringkat anggota">
+        <div class="tabs" id="period-tabs" role="group" aria-label="Periode"></div>
+        <ol class="podium" id="podium"></ol>
+
+        <div class="lb-tools">
+          <h2 id="lb-title">Peringkat lengkap</h2>
+          <input class="search" id="lb-search" type="search" placeholder="Cari nama atau username" aria-label="Cari anggota">
+        </div>
+        <div class="panel lb-table" id="lb-table"></div>
+      </section>
+
+      <aside class="aside-stack" aria-label="Info reputasi">
+        <section class="panel" id="me-card"></section>
+        <section class="panel">
+          <div class="panel__head"><h2>Cara mendapat poin</h2></div>
+          <div class="panel__body"><ul class="rules" id="rules"></ul></div>
+        </section>
+        <section class="panel">
+          <div class="panel__head"><h2>Level anggota</h2></div>
+          <div class="panel__body"><ul class="rules" id="levels"></ul></div>
+        </section>
+      </aside>
+    </div>
+  </main>
+
+  <script src="js/data.js"></script>
+  <script src="js/shared.js"></script>
+  <script src="js/leaderboard.js"></script>
+</body>
+</html>

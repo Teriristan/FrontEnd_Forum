@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel Moderasi — RuangRame</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Space+Mono:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar-inner">
+    <div class="logo">Ruang<span>Rame</span></div>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="kategori.html">Kategori</a>
+      <a href="threads.html">Thread</a>
+      <a href="notifikasi.html">Notifikasi</a>
+      <a href="leaderboard.html">Leaderboard</a>
+    </div>
+    <button class="hamburger"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="container">
+    <div class="breadcrumb"><a href="index.html">Home</a> / Panel Moderasi</div>
+    <h1>🛡️ Panel Moderasi & Report</h1>
+    <p style="color:var(--text-dim);font-size:14px;margin-top:6px;">Kelola laporan konten yang masuk dari member forum.</p>
+  </div>
+</div>
+
+<section class="section container">
+  <div class="filter-pills">
+    <div class="filter-pill active" data-status="semua">Semua</div>
+    <div class="filter-pill" data-status="pending">Pending</div>
+    <div class="filter-pill" data-status="selesai">Selesai</div>
+    <div class="filter-pill" data-status="ditolak">Ditolak</div>
+  </div>
+  <div id="laporanBox"></div>
+</section>
+
+<footer>
+  © 2026 RuangRame — Project UTS Kelompok Sistem Informasi Untar. <a href="about.html" style="color:var(--text-dim);">Tentang</a> · <a href="faq.html" style="color:var(--text-dim);">FAQ</a> · <a href="terms.html" style="color:var(--text-dim);">Peraturan</a> · <a href="moderasi.html" style="color:var(--text-dim);">Panel Moderasi</a>
+</footer>
+
+<script src="script.js"></script>
+<script>
+  const laporanBox = document.getElementById("laporanBox");
+  renderLaporan(laporanBox, laporanData, "semua");
+
+  document.querySelectorAll(".filter-pill").forEach(pill => {
+    pill.addEventListener("click", () => {
+      document.querySelectorAll(".filter-pill").forEach(p => p.classList.remove("active"));
+      pill.classList.add("active");
+      currentLaporanFilter = pill.dataset.status;
+      renderLaporan(laporanBox, laporanData, currentLaporanFilter);
+    });
+  });
+</script>
+</body>
+</html>

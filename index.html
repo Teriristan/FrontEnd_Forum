@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RuangRame — Forum Diskusi Anak Muda</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Space+Mono:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar-inner">
+    <div class="logo">Ruang<span>Rame</span></div>
+    <div class="nav-links">
+      <a href="index.html" class="active">Home</a>
+      <a href="kategori.html">Kategori</a>
+      <a href="threads.html">Thread</a>
+      <a href="index.html#trending">Trending</a>
+    </div>
+    <div class="nav-search">
+      🔍 <input type="text" id="heroSearch" placeholder="Cari thread, kategori...">
+    </div>
+    <button class="hamburger"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="container">
+    <h1>Tempat <span>ngobrol rame</span>, tanpa ribet daftar akun.</h1>
+    <p>RuangRame adalah forum diskusi komunitas dengan ratusan topik aktif tiap harinya — dari teknologi, gaming, sampai curhat kuliah. Gabung dan mulai obrolan sekarang.</p>
+    <a href="kategori.html" class="btn">Jelajahi Kategori</a>
+    <a href="threads.html" class="btn btn-outline">Lihat Semua Thread</a>
+  </div>
+</section>
+
+<div class="stats-strip">
+  <div class="container" style="display:flex;width:100%;">
+    <div class="stat-box"><div class="num">5.147</div><div class="label">Thread Aktif</div></div>
+    <div class="stat-box"><div class="num">31.7k</div><div class="label">Member</div></div>
+    <div class="stat-box"><div class="num">6</div><div class="label">Kategori</div></div>
+    <div class="stat-box"><div class="num">982</div><div class="label">Online Sekarang</div></div>
+  </div>
+</div>
+
+<section class="section container">
+  <div class="section-head">
+    <h2>🔥 Kategori Populer</h2>
+    <a href="kategori.html">Lihat semua kategori →</a>
+  </div>
+  <div class="cat-grid" id="kategoriPreview"></div>
+</section>
+
+<section class="section container">
+  <div class="section-head">
+    <h2>⚡ Thread Lagi Rame</h2>
+    <a href="threads.html">Lihat semua thread →</a>
+  </div>
+  <div id="trendingThreads"></div>
+</section>
+
+<section class="section container" id="trending">
+  <div class="section-head">
+    <h2>📰 Lagi Viral Hari Ini</h2>
+  </div>
+  <div id="trendingNews"></div>
+</section>
+
+<footer>
+  © 2026 RuangRame — Project UTS, dibuat oleh Ahmad Rafif, Laode Radit, Tristan Alpha, Christopher Reinner, Kaya Nuraini Siregar.
+</footer>
+
+<script src="script.js"></script>
+<script>
+  const catPreview = document.getElementById("kategoriPreview");
+  renderKategoriCards(catPreview, kategoriData.slice(0, 3));
+
+  const trendingBox = document.getElementById("trendingThreads");
+  renderTrendingThreads(trendingBox, threadData);
+
+  renderTrendingNews(document.getElementById("trendingNews"), trendingNewsData);
+
+  initSearch(document.getElementById("heroSearch"), (q) => {
+    if (!q) return;
+    window.location.href = "threads.html?q=" + encodeURIComponent(q);
+  });
+</script>
+</body>
+</html>

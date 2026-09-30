@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daftar Thread — RuangRame</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Space+Mono:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar-inner">
+    <div class="logo">Ruang<span>Rame</span></div>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="kategori.html">Kategori</a>
+      <a href="threads.html" class="active">Thread</a>
+      <a href="index.html#trending">Trending</a>
+    </div>
+    <div class="nav-search">
+      🔍 <input type="text" id="threadSearch" placeholder="Cari thread...">
+    </div>
+    <button class="hamburger"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="container">
+    <div class="breadcrumb"><a href="index.html">Home</a> / <a href="kategori.html">Kategori</a> / <span id="breadCatName">Semua Thread</span></div>
+    <h1 id="pageTitle">Semua Thread</h1>
+
+    <div class="tabs">
+      <button class="tab-btn active" data-sort="terbaru">Terbaru</button>
+      <button class="tab-btn" data-sort="terpopuler">Terpopuler</button>
+      <button class="tab-btn" data-sort="teratas">Teratas (Vote)</button>
+    </div>
+  </div>
+</div>
+
+<section class="section container">
+  <div id="threadListBox"></div>
+</section>
+
+<a href="#" class="btn new-thread-fab">+ Thread Baru</a>
+
+<footer>
+  © 2026 RuangRame — Project UTS Kelompok Sistem Informasi Untar.
+</footer>
+
+<script src="script.js"></script>
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const kategoriId = params.get("kategori");
+  const queryText = params.get("q");
+
+  let currentData = threadData;
+  let currentSort = "terbaru";
+
+  if (kategoriId) {
+    const kat = kategoriData.find(k => k.id === kategoriId);
+    currentData = threadData.filter(t => t.kategori === kategoriId);
+    if (kat) {
+      document.getElementById("pageTitle").textContent = kat.nama;
+      document.getElementById("breadCatName").textContent = kat.nama;
+    }
+  } else if (queryText) {
+    currentData = threadData.filter(t => t.judul.toLowerCase().includes(queryText.toLowerCase()));
+    document.getElementById("pageTitle").textContent = `Hasil pencarian: "${queryText}"`;
+    document.getElementById("breadCatName").textContent = "Hasil Pencarian";
+  }
+
+  const listBox = document.getElementById("threadListBox");
+  renderThreadList(listBox, currentData, currentSort);
+
+  document.querySelectorAll(".tab-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      currentSort = btn.dataset.sort;
+      renderThreadList(listBox, currentData, currentSort);
+    });
+  });
+
+  initSearch(document.getElementById("threadSearch"), (q) => {
+    const filtered = threadData.filter(t => t.judul.toLowerCase().includes(q));
+    renderThreadList(listBox, q ? filtered : currentData, currentSort);
+  });
+</script>
+</body>
+</html>

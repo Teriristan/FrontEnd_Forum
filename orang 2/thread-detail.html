@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Detail Thread — RuangRame</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Space+Mono:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar-inner">
+    <div class="logo">Ruang<span>Rame</span></div>
+    <div class="nav-links">
+  <a href="index.html">Home</a>
+  <a href="kategori.html">Kategori</a>
+  <a href="threads.html">Thread</a>
+  <a href="tag-populer.html">Tag</a>
+  <a href="trending-topics.html">Trending</a>
+  <a href="notifikasi.html">Notifikasi</a>
+  <a href="leaderboard.html">Leaderboard</a>
+</div>
+    <div class="nav-search">
+      🔍 <input type="text" id="detailSearch" placeholder="Cari thread...">
+    </div>
+    <button class="hamburger"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="container">
+    <div class="breadcrumb"><a href="index.html">Home</a> / <a href="threads.html">Thread</a> / Detail</div>
+  </div>
+</div>
+
+<section class="section container">
+  <div id="threadDetailBox"></div>
+
+  <div class="card" style="padding:22px;">
+    <h3 style="font-size:16px;margin-bottom:16px;">💬 Komentar</h3>
+    <div class="comment-form">
+      <textarea id="commentInput" placeholder="Tulis komentar kamu..."></textarea>
+      <button class="btn" id="sendCommentBtn" style="padding:10px 18px;font-size:13px;">Kirim Komentar</button>
+    </div>
+    <div id="commentBox" style="margin-top:10px;"></div>
+  </div>
+</section>
+
+<footer>
+  © 2026 RuangRame — Project UTS Kelompok Sistem Informasi Untar. <a href="about.html" style="color:var(--text-dim);">Tentang</a> · <a href="faq.html" style="color:var(--text-dim);">FAQ</a> · <a href="terms.html" style="color:var(--text-dim);">Peraturan</a> · <a href="moderasi.html" style="color:var(--text-dim);">Panel Moderasi</a>
+</footer>
+
+<script src="script.js"></script>
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const threadId = parseInt(params.get("id"));
+  const thread = threadData.find(t => t.id === threadId);
+
+  const detailBox = document.getElementById("threadDetailBox");
+  const commentBox = document.getElementById("commentBox");
+
+  if (!thread) {
+    detailBox.innerHTML = `<p style="color:var(--text-dim);">Thread tidak ditemukan.</p>`;
+  } else {
+    const kat = kategoriData.find(k => k.id === thread.kategori);
+    renderThreadDetail(detailBox, thread, kat ? kat.nama : thread.kategori);
+
+    let comments = getComments(thread.id);
+    renderComments(commentBox, comments);
+
+    document.getElementById("sendCommentBtn").addEventListener("click", () => {
+      const input = document.getElementById("commentInput");
+      const isi = input.value.trim();
+      if (!isi) return;
+      addDummyComment(commentBox, comments, isi);
+      input.value = "";
+    });
+  }
+
+  initSearch(document.getElementById("detailSearch"), (q) => {
+    if (!q) return;
+    window.location.href = "search.html?q=" + encodeURIComponent(q);
+  });
+</script>
+</body>
+</html>

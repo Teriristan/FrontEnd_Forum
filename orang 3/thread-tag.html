@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thread Berdasarkan Tag — RuangRame</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Space+Mono:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar-inner">
+    <div class="logo">Ruang<span>Rame</span></div>
+   <div class="nav-links">
+  <a href="index.html">Home</a>
+  <a href="kategori.html">Kategori</a>
+  <a href="threads.html">Thread</a>
+  <a href="tag-populer.html">Tag</a>
+  <a href="trending-topics.html">Trending</a>
+  <a href="notifikasi.html">Notifikasi</a>
+  <a href="leaderboard.html">Leaderboard</a>
+</div>
+    <button class="hamburger"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="container">
+    <div class="breadcrumb"><a href="index.html">Home</a> / <a href="tag-populer.html">Tag</a> / <span id="tagNameLabel">Tag</span></div>
+    <h1 id="tagTitle">#Tag</h1>
+  </div>
+</div>
+
+<section class="section container">
+  <div id="tagThreadBox"></div>
+</section>
+
+<footer>
+  © 2026 RuangRame — Project UTS Kelompok Sistem Informasi Untar. <a href="about.html" style="color:var(--text-dim);">Tentang</a> · <a href="faq.html" style="color:var(--text-dim);">FAQ</a> · <a href="terms.html" style="color:var(--text-dim);">Peraturan</a> · <a href="moderasi.html" style="color:var(--text-dim);">Panel Moderasi</a>
+</footer>
+
+<script src="script.js"></script>
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const tagId = params.get("tag");
+  const tag = tagData.find(t => t.id === tagId);
+
+  if (tag) {
+    document.getElementById("tagTitle").textContent = "#" + tag.nama;
+    document.getElementById("tagNameLabel").textContent = tag.nama;
+  } else {
+    document.getElementById("tagTitle").textContent = "Tag tidak ditemukan";
+  }
+
+  const box = document.getElementById("tagThreadBox");
+  if (tagId) {
+    renderThreadsByTag(box, tagId);
+  } else {
+    box.innerHTML = `<p style="color:var(--text-dim);padding:20px;">Tag tidak ditemukan.</p>`;
+  }
+</script>
+</body>
+</html>

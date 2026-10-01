@@ -798,3 +798,19 @@ footer {
   .value-grid { grid-template-columns: 1fr; }
   .team-grid { grid-template-columns: repeat(2, 1fr); }
 }
+/* ===== PERBAIKAN: avatar komentar & badge kategori di detail ===== */
+.comment-item .avatar {
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  flex-shrink: 0;
+}
+#threadDetailBox .tag {
+  display: inline-block;
+  font-size: 11px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  padding: 2px 10px;
+  border-radius: 20px;
+  color: var(--text-dim);
+  margin-right: 6px;
+}

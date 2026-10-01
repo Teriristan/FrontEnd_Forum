@@ -63,7 +63,7 @@
 </section>
 
 <footer>
-  © 2026 RuangRame — Project UTS Kelompok Sistem Informasi Untar. <a href="about.html" style="color:var(--text-dim);">Tentang</a> · <a href="faq.html" style="color:var(--text-dim);">FAQ</a> · <a href="terms.html" style="color:var(--text-dim);">Peraturan</a> · <a href="moderasi.html" style="color:var(--text-dim);">Panel Moderasi</a>
+  © 2026 RuangRame — Project UTS Kelompok Forum Untar. <a href="about.html" style="color:var(--text-dim);">Tentang</a> · <a href="faq.html" style="color:var(--text-dim);">FAQ</a> · <a href="terms.html" style="color:var(--text-dim);">Peraturan</a> · <a href="moderasi.html" style="color:var(--text-dim);">Panel Moderasi</a>
 </footer>
 
 <script src="script.js"></script>
@@ -82,11 +82,32 @@
 
   document.getElementById("threadForm").addEventListener("submit", (e) => {
     e.preventDefault();
+    const judul = document.getElementById("judulInput").value.trim();
+    const isi = document.getElementById("isiInput").value.trim();
+    if (!judul || !isi) return;
+
+    const baru = {
+      id: Date.now(),
+      kategori: kategoriSelect.value,
+      judul: escapeHtml(judul),
+      isi: escapeHtml(isi),
+      snippet: escapeHtml(isi.length > 80 ? isi.slice(0, 80) + "..." : isi),
+      author: "kamu", waktu: "baru saja",
+      reply: 0, view: 0, vote: 0, pinned: false
+    };
+
+    // simpan di localStorage browser (tanpa database)
+    try {
+      const saved = JSON.parse(localStorage.getItem("userThreads") || "[]");
+      saved.push(baru);
+      localStorage.setItem("userThreads", JSON.stringify(saved));
+    } catch (err) {}
+
     const banner = document.getElementById("successBanner");
+    banner.innerHTML = `✅ Thread berhasil dibuat! <a href="thread-detail.html?id=${baru.id}" style="color:inherit;font-weight:700;text-decoration:underline;">Lihat thread kamu →</a>`;
     banner.style.display = "block";
     document.getElementById("threadForm").reset();
     fileLabel.textContent = "📎 Klik untuk pilih gambar (tidak diunggah, hanya tampilan)";
-    setTimeout(() => { banner.style.display = "none"; }, 4000);
   });
 </script>
 </body>

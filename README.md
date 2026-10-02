@@ -4,10 +4,11 @@
 # Laode Raditya Fachri / 825240008
 # Christofer Reinner / 535250163
 # Kaya Nuraini Siregar / 535250172
-#
+# Ahmad Rafif Har Messina / 535250183
 
 ## Pembagian Jobdesk
 - index.html, kategori.html, threads.html → Orang 1 (Laode Radit)
+- orang 2 → Orang 2 (Ahmad Rafif Har Messina)
 - orang 3 → Orang 3 (Kaya Nuraini Siregar)
 - orang 4 → Orang 4 (Christopher Reinner)
 - orang 5 → Orang 5 (Tristan Alpha)

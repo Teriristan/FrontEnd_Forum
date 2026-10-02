@@ -20,6 +20,14 @@ const threadData = [
   { id: 8, kategori: "gaming", judul: "Review singkat game indie lokal yang underrated banget", snippet: "Baru tamatin, ceritanya related banget sama kehidupan kita...", author: "kaya.nrs", waktu: "8 jam lalu", reply: 9, view: 205, vote: 33, pinned: false },
 ];
 
+// Thread buatan user disimpan di localStorage browser, lalu digabung ke threadData
+function escapeHtml(str) {
+  return String(str).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+}
+try {
+  JSON.parse(localStorage.getItem("userThreads") || "[]").forEach(t => threadData.push(t));
+} catch (e) {}
+
 const trendingNewsData = [
   { icon: "🔥", judul: "Heboh! Startup lokal berhasil raih pendanaan Rp50 Miliar minggu ini", sumber: "TechInsight", waktu: "3 jam lalu" },
   { icon: "⚽", judul: "Timnas Indonesia lolos ke babak berikutnya, netizen ramai kasih dukungan", sumber: "SportZone", waktu: "5 jam lalu" },
@@ -120,24 +128,6 @@ function renderThreadList(container, data, sortBy) {
       </div>
     </a>
   `).join("");
-
-
-  container.innerHTML = sorted.map(t => `
-    <div class="card thread-row">
-      <div class="avatar"></div>
-      <div style="flex:1">
-        <h3>${t.pinned ? '<span class="pinned-badge">PINNED</span>' : ''}${t.judul}</h3>
-        <p class="snippet">${t.snippet}</p>
-        <div class="thread-stats">
-          <span><b>${t.author}</b></span>
-          <span>${t.waktu}</span>
-          <span><b>${t.reply}</b> balasan</span>
-          <span><b>${t.view}</b> dilihat</span>
-          <span><b>${t.vote}</b> vote</span>
-        </div>
-      </div>
-    </div>
-  `).join("");
 }
 
 // ===== SEARCH bar (filter sederhana) =====
@@ -181,7 +171,7 @@ function renderThreadDetail(container, thread, kategoriNama) {
       <h1 style="font-size:22px;margin:10px 0;">${thread.judul}</h1>
       <div class="thread-meta"><b>${thread.author}</b> · ${thread.waktu} · ${thread.view} dilihat</div>
       <p style="margin-top:16px;font-size:14px;color:var(--text-dim);line-height:1.7;">
-        ${thread.snippet} Ini adalah isi lengkap dummy dari thread untuk keperluan tampilan, karena project ini tidak menggunakan database sehingga seluruh konten bersifat statis.
+        ${thread.isi ? thread.isi : thread.snippet + " Ini adalah isi lengkap dummy dari thread untuk keperluan tampilan, karena project ini tidak menggunakan database sehingga seluruh konten bersifat statis."}
       </p>
       <div class="thread-stats" style="margin-top:16px;">
         <span>▲ <b>${thread.vote}</b> vote</span>
@@ -227,7 +217,7 @@ function addDummyComment(container, existingComments, isi) {
     id: "new-" + Date.now(),
     author: "kamu",
     waktu: "baru saja",
-    isi: isi,
+    isi: escapeHtml(isi),
     replies: []
   });
   renderComments(container, existingComments);
@@ -240,6 +230,10 @@ function renderSearchResults(container, data, keyword) {
     return;
   }
   const filtered = data.filter(t => t.judul.toLowerCase().includes(keyword.toLowerCase()));
+  if (filtered.length === 0) {
+    container.innerHTML = `<p style="color:var(--text-dim);padding:20px;">Tidak ada thread untuk "${escapeHtml(keyword)}". Coba kata kunci lain atau <a href="buat-thread.html" style="color:var(--accent-2);">buat thread baru</a>.</p>`;
+    return;
+  }
   renderThreadList(container, filtered, "terbaru");
 }
 

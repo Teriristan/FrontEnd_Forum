@@ -69,7 +69,7 @@
       document.getElementById("breadCatName").textContent = kat.nama;
     }
   } else if (queryText) {
-    currentData = threadData.filter(t => t.judul.toLowerCase().includes(queryText.toLowerCase()));
+    currentData = threadData.filter(t => cocokPencarian(t, queryText));
     document.getElementById("pageTitle").textContent = `Hasil pencarian: "${queryText}"`;
     document.getElementById("breadCatName").textContent = "Hasil Pencarian";
   }
@@ -87,7 +87,7 @@
   });
 
   initSearch(document.getElementById("threadSearch"), (q) => {
-    const filtered = threadData.filter(t => t.judul.toLowerCase().includes(q));
+    const filtered = threadData.filter(t => cocokPencarian(t, q));
     renderThreadList(listBox, q ? filtered : currentData, currentSort);
   });
 </script>

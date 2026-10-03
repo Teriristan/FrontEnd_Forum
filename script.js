@@ -137,22 +137,34 @@ function renderThreadList(container, data, sortBy) {
     return;
   }
 
-  container.innerHTML = sorted.map(t => `
-    <a href="thread-detail.html?id=${t.id}" class="card thread-row" style="display:flex;text-decoration:none;">
-      <div class="avatar"></div>
-      <div style="flex:1">
-        <h3>${t.pinned ? '<span class="pinned-badge">PINNED</span>' : ''}${t.judul}</h3>
-        <p class="snippet">${t.snippet}</p>
-        <div class="thread-stats">
-          <span><b>${t.author}</b></span>
-          <span>${t.waktu}</span>
-          <span><b>${t.reply}</b> balasan</span>
-          <span><b>${t.view}</b> dilihat</span>
-          <span><b>${t.vote}</b> vote</span>
+  
+  container.innerHTML = sorted.map((t, index) => `
+    <div class="card thread-row" style="display:flex; justify-content:space-between; align-items:center; text-decoration:none;">
+      <a href="thread-detail.html?id=${t.id}" style="display:flex; flex:1; text-decoration:none; color:inherit;">
+        <div class="avatar"></div>
+        <div style="flex:1">
+          <h3>${t.pinned ? '<span class="pinned-badge">PINNED</span>' : ''}${t.judul}</h3>
+          <p class="snippet">${t.snippet}</p>
+          <div class="thread-stats">
+            <span><b>${t.author}</b></span>
+            <span>${t.waktu}</span>
+            <span><b>${t.reply}</b> balasan</span>
+            <span><b>${t.view}</b> dilihat</span>
+            <span><b>${t.vote}</b> vote</span>
+          </div>
         </div>
-      </div>
-    </a>
+      </a>
+      <button onclick="hapusThread(${index})" style="background: #ff4d4d; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; margin-left: 15px;">Hapus</button>
+    </div>
   `).join("");
+}
+
+
+function hapusThread(index) {
+  let savedThreads = JSON.parse(localStorage.getItem("userThreads")) || [];
+  savedThreads.splice(index, 1);
+  localStorage.setItem("userThreads", JSON.stringify(savedThreads));
+  location.reload();
 }
 
 // ===== SEARCH bar (filter sederhana) =====

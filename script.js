@@ -101,9 +101,18 @@ function renderTrendingNews(container, data) {
 
 // ===== RENDER: list thread per kategori (threads.html) =====
 // ORANG 2
+function waktuKeMenit(w) {
+  const teks = String(w);
+  const angka = parseInt(teks, 10) || 0;
+  if (teks.includes("menit")) return angka;
+  if (teks.includes("jam")) return angka * 60;
+  if (teks.includes("hari")) return angka * 1440;
+  return 0;
+}
+
 function renderThreadList(container, data, sortBy) {
   let sorted = [...data];
-  if (sortBy === "terbaru") sorted.sort((a, b) => a.id - b.id).reverse();
+  if (sortBy === "terbaru") sorted.sort((a, b) => waktuKeMenit(a.waktu) - waktuKeMenit(b.waktu) || b.id - a.id);
   if (sortBy === "terpopuler") sorted.sort((a, b) => b.view - a.view);
   if (sortBy === "teratas") sorted.sort((a, b) => b.vote - a.vote);
 
@@ -112,22 +121,34 @@ function renderThreadList(container, data, sortBy) {
     return;
   }
 
-  container.innerHTML = sorted.map(t => `
-    <a href="thread-detail.html?id=${t.id}" class="card thread-row" style="display:flex;text-decoration:none;">
-      <div class="avatar"></div>
-      <div style="flex:1">
-        <h3>${t.pinned ? '<span class="pinned-badge">PINNED</span>' : ''}${t.judul}</h3>
-        <p class="snippet">${t.snippet}</p>
-        <div class="thread-stats">
-          <span><b>${t.author}</b></span>
-          <span>${t.waktu}</span>
-          <span><b>${t.reply}</b> balasan</span>
-          <span><b>${t.view}</b> dilihat</span>
-          <span><b>${t.vote}</b> vote</span>
+  
+  container.innerHTML = sorted.map((t, index) => `
+    <div class="card thread-row" style="display:flex; justify-content:space-between; align-items:center; text-decoration:none;">
+      <a href="thread-detail.html?id=${t.id}" style="display:flex; flex:1; text-decoration:none; color:inherit;">
+        <div class="avatar"></div>
+        <div style="flex:1">
+          <h3>${t.pinned ? '<span class="pinned-badge">PINNED</span>' : ''}${t.judul}</h3>
+          <p class="snippet">${t.snippet}</p>
+          <div class="thread-stats">
+            <span><b>${t.author}</b></span>
+            <span>${t.waktu}</span>
+            <span><b>${t.reply}</b> balasan</span>
+            <span><b>${t.view}</b> dilihat</span>
+            <span><b>${t.vote}</b> vote</span>
+          </div>
         </div>
-      </div>
-    </a>
+      </a>
+      <button onclick="hapusThread(${index})" style="background: #ff4d4d; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; margin-left: 15px;">Hapus</button>
+    </div>
   `).join("");
+}
+
+
+function hapusThread(index) {
+  let savedThreads = JSON.parse(localStorage.getItem("userThreads")) || [];
+  savedThreads.splice(index, 1);
+  localStorage.setItem("userThreads", JSON.stringify(savedThreads));
+  location.reload();
 }
 
 // ===== SEARCH bar (filter sederhana) =====
